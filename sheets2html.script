@@ -1,0 +1,30 @@
+function onOpen() {
+  var spreadsheet = SpreadsheetApp.getActive();
+  var menuItems = [
+    {name: 'Export as HTML', functionName: 'exportAsHTML'}
+  ];
+  spreadsheet.addMenu('Custom Menu', menuItems);
+}
+
+function exportAsHTML() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var data = sheet.getDataRange().getValues();
+  var html = '<table border="1">';
+  
+  for (var i = 0; i < data.length; i++) {
+    html += '<tr>';
+    for (var j = 0; j < data[i].length; j++) {
+      if (i === 0) {
+        html += '<th>' + data[i][j] + '</th>';
+      } else {
+        html += '<td>' + data[i][j] + '</td>';
+      }
+    }
+    html += '</tr>';
+  }
+  html += '</table>';
+  
+  var htmlOutput = HtmlService.createHtmlOutput(html);
+  htmlOutput.setWidth(800).setHeight(600);
+  SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Exported HTML');
+}
